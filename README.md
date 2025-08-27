@@ -1,1 +1,1 @@
-# mail-hawk
+# mail-hawk-ai
