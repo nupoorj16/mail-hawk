@@ -8,7 +8,8 @@ __pycache__/
 *.pot
 *.pyc
 db.sqlite3
-*.pyc
+
+# Environment
 .env
 
 # VSCode

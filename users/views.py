@@ -104,3 +104,19 @@ def oauth2_callback(request):
 
     request.session['gmail_connected'] = True
     return redirect('dashboard')
+
+@login_required
+def emails_by_category(request, category_name):
+    emails = ScrapedEmail.objects.filter(user=request.user, category=category_name).order_by('-timestamp')
+    return render(request, 'users/category_list.html', {
+        'category_name': category_name,
+        'emails': emails
+    })
+
+@login_required
+def category_view(request, category_name):
+    emails = ScrapedEmail.objects.filter(user=request.user, category=category_name).order_by('-timestamp')
+    return render(request, 'users/category_list.html', {
+        'category_name': category_name,
+        'emails': emails
+    })

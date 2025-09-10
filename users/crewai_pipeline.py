@@ -1,8 +1,26 @@
 from crewai import Crew, Agent, Task, Process
 from langchain_openai import ChatOpenAI  # type: ignore
+from dotenv import load_dotenv
+import os
 
-llm = ChatOpenAI(model="gpt-3.5-turbo", temperature=0)
+# Load .env file
+load_dotenv()
 
+# Get API key from environment variable
+api_key = os.getenv("OPENAI_API_KEY")
+
+# Error handling if key is missing
+if api_key is None:
+    raise ValueError("OPENAI_API_KEY is not set in the environment. Please check your .env file.")
+
+# Initialize the LLM with the API key
+llm = ChatOpenAI(
+    model="gpt-3.5-turbo",
+    temperature=0,
+    api_key=api_key
+)
+
+# Define the email categorization agent
 email_agent = Agent(
     role="Email Analyzer",
     goal="Categorize emails as subscription, coupon, free trial, deal, or other",
@@ -12,6 +30,7 @@ email_agent = Agent(
     llm=llm
 )
 
+# Main function to run categorization
 def get_email_category(subject: str, snippet: str) -> str:
     task = Task(
         description=f"""Categorize this email into one of:
@@ -33,4 +52,4 @@ def get_email_category(subject: str, snippet: str) -> str:
     )
 
     result = crew.kickoff()
-    return str(result).strip().lower()  
+    return str(result).strip().lower()
